@@ -1,0 +1,40 @@
+# This file was generated with `clorinde`. Do not modify.
+[package]
+name = "clorinde"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[features]
+default = ["deadpool", "chrono"]
+deadpool = ["dep:deadpool-postgres", "tokio-postgres/default"]
+wasm-async = ["tokio-postgres/js", "chrono?/wasmbind", "time?/wasm-bindgen"]
+
+chrono = ["dep:chrono"]
+time = ["dep:time"]
+
+[dependencies]
+## Core dependencies
+# Postgres types
+postgres-types = { version = "0.2.9", features = ["derive"] }
+# Postgres interaction
+postgres-protocol = "0.6.8"
+# Iterator utils required for working with `postgres_protocol::types::ArrayValues`
+fallible-iterator = "0.2.0"
+
+## Types dependencies
+# TIME, DATE, TIMESTAMP or TIMESTAMPZ
+chrono = { version = "0.4.39", optional = true }
+time = { version = "0.3.37", optional = true }
+# UUID
+uuid = "1.13.1"
+
+## Async client dependencies
+# Postgres async client
+tokio-postgres = { version = "0.7.13", features = ["with-chrono-0_4", "with-time-0_3", "with-uuid-1"] }
+# Async utils
+futures = "0.3.31"
+
+## Async features dependencies
+# Async connection pooling
+deadpool-postgres = { version = "0.14.1", optional = true }

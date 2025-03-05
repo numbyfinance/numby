@@ -1,0 +1,46 @@
+[package]
+name = "numby"
+version = "0.1.0"
+authors = ["Justin Duch <justin@duch.me>"]
+edition = "2024"
+
+[dependencies]
+clorinde = { path = "./clorinde" }
+tokio = { version = "1.0", features = ["full"] }
+
+# web server
+axum = "0.8"
+axum-extra = { version = "0.10", features = ["cookie"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = [
+    "request-id",
+    "trace",
+    "util",
+    "fs",
+] }
+
+# authentication
+axum-login = "0.8"
+password-auth = "1.0"
+
+# frontend
+maud = { version = "0.27", features = ["axum"] }
+datastar = { git = "https://github.com/starfederation/datastar", features = [
+    "axum",
+] }
+
+# error handling
+miette = { version = "7.4", features = ["fancy"] }
+thiserror = "2.0"
+
+# o11y
+tracing = "0.1"
+tracing-opentelemetry-instrumentation-sdk = "0.24.1"
+init-tracing-opentelemetry = { version = "0.25", features = [
+    "jaeger",
+    "tracing_subscriber_ext",
+    "tls",
+] }
+axum-tracing-opentelemetry = "0.25"
+opentelemetry = "0.27.1"
+opentelemetry-otlp = "0.27.0"

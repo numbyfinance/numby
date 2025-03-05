@@ -1,0 +1,34 @@
+[tasks.start]
+description = "Start numby"
+run = "cargo watch -x run"
+
+[tasks.clorinde]
+description = "Codegen queries"
+run = ["clorinde schema migrations/*", "sleek migrations/* queries/*"]
+
+[tasks.db-init]
+description = "Setup database and run migrations"
+run = ["sqlx database create", "sqlx migrate run"]
+
+[tasks.db-drop]
+description = "Drop database"
+run = ["sqlx database drop"]
+
+[tasks.migrate]
+description = "Run db migrations"
+run = "sqlx migrate run"
+
+[env]
+DATABASE_URL = "postgres://postgres:numby@localhost/numby"
+
+OTEL_SERVICE_NAME = "numby"
+OTEL_SERVICE_VERSION = "1.0"
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT = "http://127.0.0.1:4317"
+OTEL_EXPORTER_OTLP_TRACES_PROTOCOL = "grpc"
+OTEL_TRACES_SAMPLER = "always_on"
+
+[tools]
+bun = "latest"
+"cargo:cargo-watch" = "latest"
+"cargo:clorinde" = "latest"
+"cargo:sqlx-cli" = "latest"
