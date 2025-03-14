@@ -6,10 +6,13 @@ edition = "2024"
 
 [dependencies]
 clorinde = { path = "./clorinde" }
+serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.0", features = ["full"] }
+uuid = "1.16"
+chrono = "0.4"
 
 # web server
-axum = "0.8"
+axum = { version = "0.8", features = ["json"] }
 axum-extra = { version = "0.10", features = ["cookie"] }
 tower = "0.5"
 tower-http = { version = "0.6", features = [
@@ -18,9 +21,10 @@ tower-http = { version = "0.6", features = [
     "util",
     "fs",
 ] }
+tower-sessions-redis-store = "0.16"
 
 # authentication
-axum-login = "0.8"
+axum-login = { git = "https://github.com/maxcountryman/axum-login" }
 password-auth = "1.0"
 
 # frontend
@@ -36,11 +40,11 @@ thiserror = "2.0"
 # o11y
 tracing = "0.1"
 tracing-opentelemetry-instrumentation-sdk = "0.24.1"
-init-tracing-opentelemetry = { version = "0.25", features = [
+init-tracing-opentelemetry = { version = "0.27", features = [
     "jaeger",
     "tracing_subscriber_ext",
     "tls",
 ] }
-axum-tracing-opentelemetry = "0.25"
+axum-tracing-opentelemetry = "0.26"
 opentelemetry = "0.27.1"
 opentelemetry-otlp = "0.27.0"

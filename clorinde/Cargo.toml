@@ -24,14 +24,16 @@ fallible-iterator = "0.2.0"
 
 ## Types dependencies
 # TIME, DATE, TIMESTAMP or TIMESTAMPZ
-chrono = { version = "0.4.39", optional = true }
+chrono = { version = "0.4.39", optional = true, features = ["serde"] }
 time = { version = "0.3.37", optional = true }
 # UUID
-uuid = "1.13.1"
+uuid = { version = "1.13.1", features = ["serde"] }
+# JSON or JSONB
+serde = { version = "1.0.217", features = ["derive"] }
 
 ## Async client dependencies
 # Postgres async client
-tokio-postgres = { version = "0.7.13", features = ["with-chrono-0_4", "with-time-0_3", "with-uuid-1"] }
+tokio-postgres = { version = "0.7.13", features = ["with-chrono-0_4", "with-time-0_3", "with-uuid-1", "with-serde_json-1"] }
 # Async utils
 futures = "0.3.31"
 

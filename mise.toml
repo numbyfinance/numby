@@ -4,7 +4,7 @@ run = "cargo watch -x run"
 
 [tasks.clorinde]
 description = "Codegen queries"
-run = ["clorinde schema migrations/*", "sleek migrations/* queries/*"]
+run = ["clorinde schema migrations/*"]
 
 [tasks.db-init]
 description = "Setup database and run migrations"
@@ -20,6 +20,7 @@ run = "sqlx migrate run"
 
 [env]
 DATABASE_URL = "postgres://postgres:numby@localhost/numby"
+VALKEY_URL = "valkey://localhost:6379"
 
 OTEL_SERVICE_NAME = "numby"
 OTEL_SERVICE_VERSION = "1.0"
@@ -30,5 +31,5 @@ OTEL_TRACES_SAMPLER = "always_on"
 [tools]
 bun = "latest"
 "cargo:cargo-watch" = "latest"
-"cargo:clorinde" = "latest"
 "cargo:sqlx-cli" = "latest"
+"cargo:clorinde" = "latest"

@@ -1,6 +1,8 @@
 # will have compiled files and executables
 /target
 /web/assets/tailwind.css
+/web/assets/base.js
+/web/assets/vendor/**
 node_modules/
 .DS_Store
 
