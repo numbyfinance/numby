@@ -53,11 +53,10 @@ impl From<String> for Permission {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Deserialize)]
 pub struct Credentials {
     pub email: String,
     pub password: String,
-    pub _next: Option<String>, // TODO: for mfa
 }
 
 #[derive(Debug, Clone)]
@@ -89,17 +88,15 @@ impl AuthnBackend for Backend {
         creds: Self::Credentials,
     ) -> Result<Option<Self::User>, Self::Error> {
         let client = self.pool.get().await.unwrap();
-        let user = get_user_by_email()
-            .bind(&client, &creds.email)
-            .one()
-            .await?;
 
-        task::spawn_blocking(|| {
-            if verify_password(creds.password, &user.password).is_ok() {
-                Ok(Some(AuthenticatedUser::from(user)))
-            } else {
-                Ok(None)
-            }
+        let user = match get_user_by_email().bind(&client, &creds.email).one().await {
+            Ok(user) => user,
+            Err(_) => return Ok(None),
+        };
+
+        task::spawn_blocking(|| match verify_password(creds.password, &user.password) {
+            Ok(_) => Ok(Some(AuthenticatedUser::from(user))),
+            Err(_) => Ok(None),
         })
         .await?
     }

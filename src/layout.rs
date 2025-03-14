@@ -1,4 +1,3 @@
-use axum::{http::StatusCode, response::IntoResponse};
 use maud::{DOCTYPE, Markup, PreEscaped, html};
 
 use crate::session::AuthSession;
@@ -6,6 +5,8 @@ use crate::session::AuthSession;
 pub struct Layout {
     pub session: AuthSession,
     pub head: Option<Markup>,
+    pub sidebar: bool,
+    pub content: bool,
 }
 
 impl Layout {
@@ -13,11 +14,23 @@ impl Layout {
         Self {
             session,
             head: None,
+            sidebar: true,
+            content: true,
         }
     }
 
-    pub fn with_head(mut self, head: Markup) -> Self {
+    pub fn head(mut self, head: Markup) -> Self {
         self.head = Some(head);
+        self
+    }
+
+    pub fn no_sidebar(mut self) -> Self {
+        self.sidebar = false;
+        self
+    }
+
+    pub fn no_content(mut self) -> Self {
+        self.content = false;
         self
     }
 
@@ -50,8 +63,20 @@ impl Layout {
 
             title { (title) }
 
-            body {
-                (children)
+            body class="font-inter antialiased bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400" {
+                @if self.sidebar {
+                   (crate::components::sidebar())
+                }
+
+                @if self.content {
+                    div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden" {
+                        main class="grow" {
+                            (children)
+                        }
+                    }
+                } @else {
+                    (children)
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
+use axum::{Json, extract::State, response::IntoResponse};
 use tower_sessions_redis_store::fred::prelude::ClientLike;
 
 use crate::AppState;

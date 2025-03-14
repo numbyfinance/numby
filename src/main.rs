@@ -16,6 +16,7 @@ use tower_sessions_redis_store::{
     fred::prelude::{ClientLike, Config as ValkeyConfig, Pool as ValkeyPool},
 };
 
+mod components;
 mod layout;
 mod routes;
 mod session;

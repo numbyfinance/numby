@@ -31,7 +31,7 @@ create table if not exists users (
     password varchar(255) not null,
     created_at timestamp with time zone default current_timestamp,
     updated_at timestamp with time zone default current_timestamp,
-    is_active boolean default true
+    tombstone boolean default false
 );
 
 create index idx_users_email on users(email);
@@ -58,10 +58,11 @@ create table if not exists groups_permissions (
     primary key (group_id, permission_id)
 );
 
-insert into users (username, password)
+insert into users (email, name, password)
 values (
-    'ferris',
-    '$argon2id$v=19$m=19456,t=2,p=1$NVPUw1ao38nxs9MAAhv8/w$TocDfKIwYHMXY52hn00KFK+pnRVTqARF8QHpkE1g5yQ'
+    'topaz@ipc.org',
+    'Topaz & Numby',
+    '$argon2id$v=19$m=19456,t=2,p=1$hmH0Kladr68gSnEwAFV9xQ$qmqH96rVX7OTJRsxjfInwboRZ9fh77t/63brhO0Usz0'
 );
 
 insert into permissions (name) values ('protected.read');
@@ -81,9 +82,9 @@ values (
 
 insert into users_groups (user_id, group_id)
 values (
-    (select id from users where username = 'ferris'),
+    (select id from users where email = 'topaz@ipc.org'),
     (select id from groups where name = 'users')
 ), (
-    (select id from users where username = 'ferris'),
+    (select id from users where email = 'topaz@ipc.org'),
     (select id from groups where name = 'superusers')
 );

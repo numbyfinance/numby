@@ -8,6 +8,7 @@ fn main() {
 
     // Build Tailwind
     println!("cargo::rerun-if-changed=src");
+    println!("cargo::rerun-if-changed=web/tailwind.css");
     println!("cargo::rerun-if-changed=tailwind.config.ts");
     std::process::Command::new("sh")
         .current_dir(path.clone())
