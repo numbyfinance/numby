@@ -58,8 +58,9 @@ create table if not exists groups_permissions (
     primary key (group_id, permission_id)
 );
 
-insert into users (email, name, password)
+insert into users (id, email, name, password)
 values (
+    '0195989c-d1db-7a70-9060-9cea4a6b8332',
     'topaz@ipc.org',
     'Topaz & Numby',
     '$argon2id$v=19$m=19456,t=2,p=1$hmH0Kladr68gSnEwAFV9xQ$qmqH96rVX7OTJRsxjfInwboRZ9fh77t/63brhO0Usz0'

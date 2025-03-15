@@ -39,40 +39,45 @@ mod post {
         meta: Query<Meta>,
         ReadSignals(creds): ReadSignals<Credentials>,
     ) -> impl IntoResponse {
-        Sse(stream! {
-            let user = match session.authenticate(creds).await {
-                Ok(Some(user)) => user,
-                Ok(None) => {
+        // NOTE: This can't all be wrapped in an Sse() because it needs to set a cookie
+        let user = match session.authenticate(creds).await {
+            Ok(Some(user)) => user,
+            Ok(None) => {
+                return Sse(stream! {
                     yield MergeFragments::new(html! { p { "Incorrect email or password." } })
                         .selector("#error")
                         .merge_mode(datastar::prelude::FragmentMergeMode::Inner).into();
-
-                    return;
-                }
-                Err(e) => {
-                    tracing::error!("{}", e.to_string());
+                })
+                .into_response();
+            }
+            Err(e) => {
+                tracing::error!("{}", e.to_string());
+                return Sse(stream! {
                     yield MergeFragments::new(html! { p { "Unknown error (1), please try again later." } })
                         .selector("#error")
                         .merge_mode(datastar::prelude::FragmentMergeMode::Inner).into();
+                }).into_response();
+            }
+        };
 
-                    return;
-                }
-            };
-
-            match session.login(&user).await {
-                Ok(_) => {
-                    let redirect_url = meta.next.as_deref().unwrap_or("/tp");
-                    yield ExecuteScript::new(format!("window.location = '{}'", redirect_url)).into()
-                }
-                Err(e) => {
-                    dbg!(&e);
-                    tracing::error!("{}", e.to_string());
+        match session.login(&user).await {
+            Ok(_) => {
+                let redirect_url = meta.next.as_deref().unwrap_or("/tp");
+                let js_command = format!("window.location.assign('{}')", redirect_url);
+                Sse(stream! {
+                    yield ExecuteScript::new(js_command).into()
+                })
+                .into_response()
+            }
+            Err(e) => {
+                tracing::error!("{}", e.to_string());
+                Sse(stream! {
                     yield MergeFragments::new(html! { p { "Unknown error (2), please try again later." } })
                         .selector("#error")
                         .merge_mode(datastar::prelude::FragmentMergeMode::Inner).into()
-                }
+                }).into_response()
             }
-        })
+        }
     }
 }
 

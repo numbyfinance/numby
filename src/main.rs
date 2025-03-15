@@ -20,6 +20,7 @@ mod components;
 mod layout;
 mod routes;
 mod session;
+#[cfg(test)]
 mod tests;
 
 #[derive(Clone)]

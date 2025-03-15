@@ -14,17 +14,18 @@ use std::sync::{
     Arc,
     atomic::{AtomicUsize, Ordering},
 };
-use std::time::Duration;
 use testcontainers::{
     ContainerAsync, GenericImage, ImageExt,
     core::{IntoContainerPort, WaitFor},
     runners::AsyncRunner,
 };
 use tower::ServiceExt;
-use tower_sessions_redis_store::fred::prelude::{Config as ValkeyConfig, Pool as ValkeyPool};
+use tower_sessions_redis_store::fred::prelude::{
+    ClientLike, Config as ValkeyConfig, Pool as ValkeyPool,
+};
 
-use crate::AppState;
 use crate::session::Backend;
+use crate::{AppState, session::Credentials};
 
 static INSTANCE_COUNT: AtomicUsize = AtomicUsize::new(0);
 static SHARED_ENV: Lazy<TestEnv> = Lazy::new(|| Box::pin(async { TestEnv::new().await }));
@@ -45,7 +46,9 @@ impl SseEvent {
 }
 
 pub struct TextContext {
-    pub app: Router,
+    pub _state: AppState,
+    app: Router,
+    cookie: Option<String>,
 }
 
 impl TextContext {
@@ -56,7 +59,7 @@ impl TextContext {
             .await
             .unwrap();
 
-        // NOTE: using MemoryStore instead of valkey to prevent flakiness
+        // NOTE: using MemoryStore instead of Valkey to prevent flakiness
         let session_store = MemoryStore::default();
         let session_layer = SessionManagerLayer::new(session_store).with_secure(false);
 
@@ -68,7 +71,57 @@ impl TextContext {
                 .merge(router)
                 .layer(auth_layer)
                 .with_state(env.state.clone()),
+            cookie: None,
+            _state: env.state.clone(),
         }
+    }
+
+    pub async fn login(mut self) -> Self {
+        let credentials = Credentials {
+            email: "topaz@ipc.org".to_string(),
+            password: "topaz".to_string(),
+        };
+
+        let request = Request::builder()
+            .method("POST")
+            .uri("/login")
+            .header("content-type", "application/json")
+            .body(Body::from(serde_json::to_string(&credentials).unwrap()))
+            .unwrap();
+
+        let response = self.send_request(request).await;
+
+        let cookie_header = response
+            .headers()
+            .get("set-cookie")
+            .unwrap()
+            .to_str()
+            .unwrap();
+
+        let id_cookie = cookie_header.split(';').next().unwrap().to_string();
+
+        assert!(
+            self.assert_sse_contains(
+                response,
+                "datastar-execute-script",
+                "window.location.assign"
+            )
+            .await,
+            "Expected redirect but didn't find it"
+        );
+
+        self.cookie = Some(id_cookie);
+
+        self
+    }
+
+    pub fn build_request(&self) -> axum::http::request::Builder {
+        Request::builder().header(
+            "Cookie",
+            self.cookie
+                .as_ref()
+                .expect("No cookie, call `.login()` first"),
+        )
     }
 
     pub async fn send_request(&self, request: Request<Body>) -> Response<Body> {
@@ -144,12 +197,20 @@ impl Drop for TextContext {
                         .await
                         .unwrap();
 
-                    if let Err(e) = env.postgres.container.stop().await {
-                        eprintln!("Error stopping postgres container: {}", e);
+                    if let Err(e) = tokio::process::Command::new("podman")
+                        .args(["rm", "-f", "-v", &env.postgres.container.id()])
+                        .output()
+                        .await
+                    {
+                        eprintln!("Error removing postgres container: {}", e);
                     }
 
-                    if let Err(e) = env.valkey.container.stop().await {
-                        eprintln!("Error stopping valkey container: {}", e);
+                    if let Err(e) = tokio::process::Command::new("podman")
+                        .args(["rm", "-f", "-v", &env.valkey.container.id()])
+                        .output()
+                        .await
+                    {
+                        eprintln!("Error removing valkey container: {}", e);
                     }
                 });
             });
@@ -205,7 +266,7 @@ pub struct ValkeyContainer {
 
 impl ValkeyContainer {
     pub async fn new() -> Self {
-        let container = GenericImage::new("valkey", "8")
+        let container = GenericImage::new("valkey/valkey", "8")
             .with_exposed_port(6379.tcp())
             .with_wait_for(WaitFor::message_on_stdout("Ready to accept connections"))
             .start()
@@ -252,7 +313,8 @@ impl TestEnv {
             state,
         };
 
-        std::thread::sleep(Duration::from_secs(5));
+        // wait for connections
+        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
 
         env.init_database().await;
         env
@@ -267,7 +329,7 @@ impl TestEnv {
             .create_pool(Some(Runtime::Tokio1), NoTls)
             .expect("Failed to create database pool");
 
-        let valkey = ValkeyPool::new(
+        let val_pool = ValkeyPool::new(
             ValkeyConfig::from_url(&valkey.get_connection_string().await)
                 .expect("Failed to create Valkey config"),
             None,
@@ -277,18 +339,25 @@ impl TestEnv {
         )
         .expect("Failed to create Valkey pool");
 
-        AppState { pool, valkey }
+        let _ = val_pool.connect();
+        val_pool.wait_for_connect().await.unwrap();
+
+        AppState {
+            pool,
+            valkey: val_pool,
+        }
     }
 
     async fn init_database(&self) {
         let database_url = self.postgres.get_connection_string().await;
 
-        let create_output = std::process::Command::new("sqlx")
+        let create_output = tokio::process::Command::new("sqlx")
             .arg("database")
             .arg("create")
             .arg("--database-url")
             .arg(&database_url)
             .output()
+            .await
             .expect("Failed to execute sqlx database create command");
 
         if !create_output.status.success() {
@@ -298,12 +367,13 @@ impl TestEnv {
             }
         }
 
-        let migrate_output = std::process::Command::new("sqlx")
+        let migrate_output = tokio::process::Command::new("sqlx")
             .arg("migrate")
             .arg("run")
             .arg("--database-url")
             .arg(&database_url)
             .output()
+            .await
             .expect("Failed to execute sqlx migrate run command");
 
         if !migrate_output.status.success() {
