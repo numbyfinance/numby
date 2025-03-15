@@ -10,6 +10,8 @@ tokio = { version = "1.0", features = ["full"] }
 async-stream = "0.3"
 tokio-stream = "0.1"
 serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+async-lazy = "0.1"
 uuid = "1.16"
 chrono = "0.4"
 
@@ -17,6 +19,8 @@ chrono = "0.4"
 axum = { version = "0.8", features = ["json"] }
 axum-extra = { version = "0.10", features = ["cookie"] }
 axum-macros = "0.5"
+http-body = "1.0"
+http-body-util = "0.1"
 tower = "0.5"
 tower-http = { version = "0.6", features = [
     "request-id",
@@ -51,3 +55,6 @@ init-tracing-opentelemetry = { version = "0.27", features = [
 axum-tracing-opentelemetry = "0.26"
 opentelemetry = "0.27.1"
 opentelemetry-otlp = "0.27.0"
+
+[dev-dependencies]
+testcontainers = "0.23.3"

@@ -2,6 +2,7 @@ use maud::{DOCTYPE, Markup, PreEscaped, html};
 
 use crate::session::AuthSession;
 
+#[allow(dead_code)]
 pub struct Layout {
     pub session: AuthSession,
     pub head: Option<Markup>,
@@ -9,6 +10,7 @@ pub struct Layout {
     pub content: bool,
 }
 
+#[allow(dead_code)]
 impl Layout {
     pub fn new(session: AuthSession) -> Self {
         Self {

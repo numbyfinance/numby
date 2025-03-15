@@ -20,6 +20,7 @@ mod components;
 mod layout;
 mod routes;
 mod session;
+mod tests;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -51,13 +52,13 @@ async fn main() -> Result<()> {
             .into(),
     );
 
-    //
-    // Valkey pool
-    //
-
     let pool = cfg
         .create_pool(Some(Runtime::Tokio1), NoTls)
         .into_diagnostic()?;
+
+    //
+    // Valkey pool
+    //
 
     let valkey = ValkeyPool::new(
         ValkeyConfig::from_url(&std::env::var("VALKEY_URL").expect("No VALKEY_URL env var"))

@@ -40,7 +40,7 @@ mod post {
         ReadSignals(creds): ReadSignals<Credentials>,
     ) -> impl IntoResponse {
         Sse(stream! {
-            let user = match session.authenticate(creds.clone()).await {
+            let user = match session.authenticate(creds).await {
                 Ok(Some(user)) => user,
                 Ok(None) => {
                     yield MergeFragments::new(html! { p { "Incorrect email or password." } })
@@ -51,7 +51,7 @@ mod post {
                 }
                 Err(e) => {
                     tracing::error!("{}", e.to_string());
-                    yield MergeFragments::new(html! { p { "Unknown error, please try again later." } })
+                    yield MergeFragments::new(html! { p { "Unknown error (1), please try again later." } })
                         .selector("#error")
                         .merge_mode(datastar::prelude::FragmentMergeMode::Inner).into();
 
@@ -59,16 +59,19 @@ mod post {
                 }
             };
 
-            if session.login(&user).await.is_err() {
-                yield MergeFragments::new(html! { p { "Unknown error, please try again later." } })
-                    .selector("#error")
-                    .merge_mode(datastar::prelude::FragmentMergeMode::Inner).into();
-
-                return;
+            match session.login(&user).await {
+                Ok(_) => {
+                    let redirect_url = meta.next.as_deref().unwrap_or("/tp");
+                    yield ExecuteScript::new(format!("window.location = '{}'", redirect_url)).into()
+                }
+                Err(e) => {
+                    dbg!(&e);
+                    tracing::error!("{}", e.to_string());
+                    yield MergeFragments::new(html! { p { "Unknown error (2), please try again later." } })
+                        .selector("#error")
+                        .merge_mode(datastar::prelude::FragmentMergeMode::Inner).into()
+                }
             }
-
-            let redirect_url = meta.next.as_deref().unwrap_or("/tp");
-            yield ExecuteScript::new(format!("window.location = '{}'", redirect_url)).into();
         })
     }
 }

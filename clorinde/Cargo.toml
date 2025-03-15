@@ -24,12 +24,12 @@ fallible-iterator = "0.2.0"
 
 ## Types dependencies
 # TIME, DATE, TIMESTAMP or TIMESTAMPZ
-chrono = { version = "0.4.39", optional = true, features = ["serde"] }
-time = { version = "0.3.37", optional = true }
+chrono = { version = "0.4.40", optional = true, features = ["serde"] }
+time = { version = "0.3.39", optional = true }
 # UUID
-uuid = { version = "1.13.1", features = ["serde"] }
+uuid = { version = "1.15.1", features = ["serde"] }
 # JSON or JSONB
-serde = { version = "1.0.217", features = ["derive"] }
+serde = { version = "1.0.218", features = ["derive"] }
 
 ## Async client dependencies
 # Postgres async client

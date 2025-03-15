@@ -1,0 +1,5 @@
+#!/bin/sh
+
+if command -v podman >/dev/null 2>&1; then
+    export DOCKER_HOST=unix://$(podman info --format '{{.Host.RemoteSocket.Path}}')
+fi

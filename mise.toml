@@ -4,7 +4,7 @@ run = "cargo watch -x run"
 
 [tasks.clorinde]
 description = "Codegen queries"
-run = ["clorinde schema migrations/*"]
+run = "clorinde schema migrations/*"
 
 [tasks.db-init]
 description = "Setup database and run migrations"
@@ -12,13 +12,15 @@ run = ["sqlx database create", "sqlx migrate run"]
 
 [tasks.db-drop]
 description = "Drop database"
-run = ["sqlx database drop"]
+run = "sqlx database drop"
 
 [tasks.migrate]
 description = "Run db migrations"
 run = "sqlx migrate run"
 
 [env]
+_.source = "./env.sh"
+
 DATABASE_URL = "postgres://postgres:numby@localhost/numby"
 VALKEY_URL = "valkey://localhost:6379"
 

@@ -53,7 +53,7 @@ impl From<String> for Permission {
     }
 }
 
-#[derive(Debug, Clone, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct Credentials {
     pub email: String,
     pub password: String,

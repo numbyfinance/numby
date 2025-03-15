@@ -8,7 +8,7 @@ pub struct User {
     pub password: String,
     pub created_at: crate::types::time::TimestampTz,
     pub updated_at: crate::types::time::TimestampTz,
-    pub is_active: bool,
+    pub tombstone: bool,
 }
 pub struct UserBorrowed<'a> {
     pub id: uuid::Uuid,
@@ -17,7 +17,7 @@ pub struct UserBorrowed<'a> {
     pub password: &'a str,
     pub created_at: crate::types::time::TimestampTz,
     pub updated_at: crate::types::time::TimestampTz,
-    pub is_active: bool,
+    pub tombstone: bool,
 }
 impl<'a> From<UserBorrowed<'a>> for User {
     fn from(
@@ -28,7 +28,7 @@ impl<'a> From<UserBorrowed<'a>> for User {
             password,
             created_at,
             updated_at,
-            is_active,
+            tombstone,
         }: UserBorrowed<'a>,
     ) -> Self {
         Self {
@@ -38,7 +38,7 @@ impl<'a> From<UserBorrowed<'a>> for User {
             password: password.into(),
             created_at,
             updated_at,
-            is_active,
+            tombstone,
         }
     }
 }
@@ -171,7 +171,7 @@ impl GetUserByEmailStmt {
                 password: row.get(3),
                 created_at: row.get(4),
                 updated_at: row.get(5),
-                is_active: row.get(6),
+                tombstone: row.get(6),
             },
             mapper: |it| User::from(it),
         }
@@ -200,7 +200,7 @@ impl GetUserByIdStmt {
                 password: row.get(3),
                 created_at: row.get(4),
                 updated_at: row.get(5),
-                is_active: row.get(6),
+                tombstone: row.get(6),
             },
             mapper: |it| User::from(it),
         }
