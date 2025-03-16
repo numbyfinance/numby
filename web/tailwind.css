@@ -260,13 +260,3 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-switch input[type="checkbox"]:disabled + label > span:first-child {
     @apply bg-gray-400 dark:bg-gray-600;
 }
-
-/* Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
-.no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-}

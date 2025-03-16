@@ -1,8 +1,10 @@
-# will have compiled files and executables
-/target
+/src/static/static_files.rs
 /web/static/tailwind.css
 /web/static/base.js
 /web/static/vendor/**
+
+# will have compiled files and executables
+/target
 node_modules/
 .DS_Store
 

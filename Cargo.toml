@@ -7,6 +7,7 @@ edition = "2024"
 [dependencies]
 clorinde = { path = "./clorinde" }
 tokio = { version = "1.0", features = ["full"] }
+tokio-util = "0.7"
 async-stream = "0.3"
 tokio-stream = "0.1"
 serde = { version = "1.0", features = ["derive"] }
@@ -17,7 +18,7 @@ chrono = "0.4"
 
 # web server
 axum = { version = "0.8", features = ["json"] }
-axum-extra = { version = "0.10", features = ["cookie"] }
+axum-extra = { version = "0.10", features = ["cookie", "typed-routing"] }
 axum-macros = "0.5"
 http-body = "1.0"
 http-body-util = "0.1"
@@ -58,3 +59,6 @@ opentelemetry-otlp = "0.27.0"
 
 [dev-dependencies]
 testcontainers = "0.23.3"
+
+[build-dependencies]
+cache-busters = "0.1"

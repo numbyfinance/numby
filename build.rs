@@ -1,3 +1,7 @@
+use std::path::PathBuf;
+
+use cache_busters::generate_static_files_code;
+
 fn main() {
     let path = std::fs::canonicalize(".");
 
@@ -42,4 +46,10 @@ fn main() {
             .status()
             .expect(&format!("failed building vendor file: {}", file));
     }
+
+    // Cache bust static files
+    let asset_dirs = vec![PathBuf::from("./web/static")];
+    let out_dir = PathBuf::from("./src/static");
+
+    generate_static_files_code(&out_dir, &asset_dirs, &vec![]).unwrap();
 }

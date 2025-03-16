@@ -1,22 +1,30 @@
 [tasks.start]
 description = "Start numby"
-run = "cargo watch -x run"
+run = "cargo watch -x run --ignore static_files.rs"
 
-[tasks.clorinde]
-description = "Codegen queries"
-run = "clorinde schema migrations/*"
-
-[tasks.db-init]
+[tasks."db:setup"]
 description = "Setup database and run migrations"
-run = ["sqlx database create", "sqlx migrate run"]
+run = "sqlx database setup --source db/migrations"
 
-[tasks.db-drop]
+[tasks."db:drop"]
 description = "Drop database"
 run = "sqlx database drop"
 
-[tasks.migrate]
+[tasks."db:codegen"]
+description = "Codegen db queries"
+run = "clorinde schema db/migrations/*.up.sql"
+
+[tasks."db:migrate:run"]
 description = "Run db migrations"
-run = "sqlx migrate run"
+run = "sqlx migrate run --source db/migrations"
+
+[tasks."db:migrate:add"]
+description = "Add a db migration"
+run = "sqlx migrate add --source db/migrations -r"
+
+[tasks."db:migrate:fixture"]
+description = "Add a fixture for tests"
+run = "sqlx migrate add --source db/fixtures"
 
 [env]
 _.source = "./env.sh"

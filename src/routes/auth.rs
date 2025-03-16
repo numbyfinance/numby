@@ -12,6 +12,7 @@ use datastar::{
 };
 use maud::html;
 
+use crate::r#static::statics;
 use crate::{
     AppState,
     layout::Layout,
@@ -102,7 +103,7 @@ mod get {
                            div class="min-h-[100dvh] flex h-screen" {
                                div class="max-w-sm m-auto w-full px-4 py-8" {
                                    div class="flex flex-col" {
-                                       img class="align-center w-24 h-24" src="/static/numby.png" alt="Logo";
+                                       img class="align-center w-24 h-24" src=(statics::numby_png.name) alt="Logo";
                                        h1 class="text-3xl text-gray-800 dark:text-gray-100 font-bold mb-6" { "Welcome back!" }
                                    }
                                    form {
@@ -143,7 +144,7 @@ mod get {
                        }
 
                        div class="hidden md:block absolute top-0 bottom-0 right-0 md:w-1/2" aria-hidden="true" {
-                           img class="object-contain object-center w-full h-full" src="/static/kafka.webp" alt="Authentication image";
+                           img class="object-contain object-center w-full h-full" src=(statics::kafka_webp.name) alt="Authentication image";
                        }
                    }
                }

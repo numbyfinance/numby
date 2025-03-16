@@ -1,3 +1,5 @@
+-- Add up migration script here
+
 -- while we wait for postgresql 18
 -- https://gist.github.com/kjmph/5bd772b2c2df145aa645b837da7eca74
 create or replace function uuid_generate_v7()
@@ -34,7 +36,7 @@ create table if not exists users (
     tombstone boolean default false
 );
 
-create index idx_users_email on users(email);
+create index idx_users_id on users(id);
 
 create table if not exists groups (
     id uuid default public.uuid_generate_v7() primary key,

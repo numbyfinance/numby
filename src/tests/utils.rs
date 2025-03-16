@@ -351,34 +351,47 @@ impl TestEnv {
     async fn init_database(&self) {
         let database_url = self.postgres.get_connection_string().await;
 
-        let create_output = tokio::process::Command::new("sqlx")
-            .arg("database")
-            .arg("create")
+        self.run_sqlx(&["database", "create"], &database_url, "create database")
+            .await;
+
+        // migrations
+        self.run_sqlx(
+            &["migrate", "run", "--source", "db/migrations"],
+            &database_url,
+            "run migrations",
+        )
+        .await;
+
+        // fixtures
+        self.run_sqlx(
+            &[
+                "migrate",
+                "run",
+                "--source",
+                "db/fixtures",
+                "--ignore-missing",
+            ],
+            &database_url,
+            "run fixtures",
+        )
+        .await;
+    }
+
+    async fn run_sqlx(&self, args: &[&str], database_url: &str, error_msg: &str) {
+        let status = tokio::process::Command::new("sqlx")
+            .args(args)
             .arg("--database-url")
-            .arg(&database_url)
+            .arg(database_url)
             .output()
             .await
-            .expect("Failed to execute sqlx database create command");
+            .expect(&format!("Failed to execute sqlx command: {}", error_msg));
 
-        if !create_output.status.success() {
-            let stderr = String::from_utf8_lossy(&create_output.stderr);
-            if !stderr.contains("database exists") {
-                println!("Database creation note: {}", stderr);
+        if !status.status.success() {
+            let stderr = String::from_utf8_lossy(&status.stderr);
+            if args[0] == "database" && stderr.contains("database exists") {
+                return;
             }
-        }
-
-        let migrate_output = tokio::process::Command::new("sqlx")
-            .arg("migrate")
-            .arg("run")
-            .arg("--database-url")
-            .arg(&database_url)
-            .output()
-            .await
-            .expect("Failed to execute sqlx migrate run command");
-
-        if !migrate_output.status.success() {
-            let stderr = String::from_utf8_lossy(&migrate_output.stderr);
-            panic!("Failed to run migrations: {}", stderr);
+            panic!("Failed to {}: {}", error_msg, stderr);
         }
     }
 }

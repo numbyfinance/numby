@@ -228,15 +228,19 @@ checksum = "460fc6f625a1f7705c6cf62d0d070794e94668988b1c38111baeec177c715f7b"
 dependencies = [
  "axum 0.8.1",
  "axum-core 0.5.0",
+ "axum-macros",
  "bytes",
  "cookie",
+ "form_urlencoded",
  "futures-util",
  "http",
  "http-body",
  "http-body-util",
  "mime",
+ "percent-encoding",
  "pin-project-lite",
  "serde",
+ "serde_html_form",
  "tower 0.5.2",
  "tower-layer",
  "tower-service",
@@ -437,6 +441,15 @@ checksum = "7dafe3a8757b027e2be6e4e5601ed563c55989fcf1546e933c66c8eb3a058d35"
 dependencies = [
  "bytes",
  "either",
+]
+
+[[package]]
+name = "cache-busters"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "59d6d44eba5c175d2137023c7762c4670f1ea1b06d21736e44c22b41bb3bb2f6"
+dependencies = [
+ "md5",
 ]
 
 [[package]]
@@ -1495,6 +1508,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "md5"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
+
+[[package]]
 name = "memchr"
 version = "2.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1629,6 +1648,7 @@ dependencies = [
  "axum-login",
  "axum-macros",
  "axum-tracing-opentelemetry",
+ "cache-busters",
  "chrono",
  "clorinde",
  "datastar",
@@ -1646,6 +1666,7 @@ dependencies = [
  "thiserror 2.0.12",
  "tokio",
  "tokio-stream",
+ "tokio-util",
  "tower 0.5.2",
  "tower-http",
  "tower-sessions-redis-store",
@@ -2515,6 +2536,19 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "serde_html_form"
+version = "0.2.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d2de91cf02bbc07cde38891769ccd5d4f073d22a40683aa4bc7a95781aaa2c4"
+dependencies = [
+ "form_urlencoded",
+ "indexmap 2.8.0",
+ "itoa",
+ "ryu",
+ "serde",
 ]
 
 [[package]]

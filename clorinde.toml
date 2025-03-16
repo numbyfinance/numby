@@ -1,3 +1,5 @@
+queries = "db/queries"
+podman = true
 serialize = true
 
 [types]

@@ -10,7 +10,6 @@ use axum_login::{
 use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use miette::{IntoDiagnostic, Result};
 use std::net::SocketAddr;
-use tower_http::services::ServeDir;
 use tower_sessions_redis_store::{
     RedisStore,
     fred::prelude::{ClientLike, Config as ValkeyConfig, Pool as ValkeyPool},
@@ -20,6 +19,7 @@ mod components;
 mod layout;
 mod routes;
 mod session;
+mod r#static;
 #[cfg(test)]
 mod tests;
 
@@ -102,7 +102,7 @@ async fn main() -> Result<()> {
         .merge(protected_routes)
         .merge(routes::auth::router())
         .route("/health", get(routes::health))
-        .nest_service("/static", ServeDir::new("./web/static"))
+        .route("/static/{path}", get(r#static::route::static_path))
         .layer(OtelInResponseLayer::default())
         .layer(OtelAxumLayer::default())
         .layer(auth_layer)

@@ -1,6 +1,7 @@
 use maud::{DOCTYPE, Markup, PreEscaped, html};
 
 use crate::session::AuthSession;
+use crate::r#static::statics;
 
 #[allow(dead_code)]
 pub struct Layout {
@@ -42,10 +43,10 @@ impl Layout {
             meta charset="utf-8";
             meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0";
 
-            link rel="stylesheet" href="/static/tailwind.css";
+            link rel="stylesheet" href=(statics::tailwind_css.name);
 
-            script type="module" src="/static/vendor/datastar.js" {}
-            script type="module" src="/static/base.js" {}
+            script type="module" src=(statics::datastar_js.name) {}
+            script type="module" src=(statics::base_js.name) {}
 
             script {
                 (PreEscaped("
