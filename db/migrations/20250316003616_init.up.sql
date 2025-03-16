@@ -28,9 +28,9 @@ volatile;
 
 create table if not exists users (
     id uuid default public.uuid_generate_v7() primary key,
-    email varchar(255) unique not null,
-    name varchar(255) not null,
-    password varchar(255) not null,
+    email text unique not null,
+    name text not null,
+    password text not null,
     created_at timestamp with time zone default current_timestamp,
     updated_at timestamp with time zone default current_timestamp,
     tombstone boolean default false
@@ -39,25 +39,23 @@ create table if not exists users (
 create index idx_users_id on users(id);
 
 create table if not exists groups (
-    id uuid default public.uuid_generate_v7() primary key,
-    name text not null unique
+    name text not null unique primary key
 );
 
 create table if not exists permissions (
-    id uuid default public.uuid_generate_v7() primary key,
-    name text not null unique
+    name text not null unique primary key
 );
 
 create table if not exists users_groups (
     user_id uuid references users(id),
-    group_id uuid references groups(id),
-    primary key (user_id, group_id)
+    "group" text references groups(name),
+    primary key (user_id, "group")
 );
 
 create table if not exists groups_permissions (
-    group_id uuid references groups(id),
-    permission_id uuid references permissions(id),
-    primary key (group_id, permission_id)
+    "group" text references groups(name),
+    permission text references permissions(name),
+    primary key ("group", permission)
 );
 
 insert into users (id, email, name, password)
@@ -68,26 +66,11 @@ values (
     '$argon2id$v=19$m=19456,t=2,p=1$hmH0Kladr68gSnEwAFV9xQ$qmqH96rVX7OTJRsxjfInwboRZ9fh77t/63brhO0Usz0'
 );
 
-insert into permissions (name) values ('protected.read');
-insert into permissions (name) values ('restricted.read');
-
 insert into groups (name) values ('users');
-insert into groups (name) values ('superusers');
+insert into permissions (name) values ('protected.read');
 
-insert into groups_permissions (group_id, permission_id)
-values (
-    (select id from groups where name = 'users'),
-    (select id from permissions where name = 'protected.read')
-), (
-    (select id from groups where name = 'superusers'),
-    (select id from permissions where name = 'restricted.read')
-);
+insert into groups_permissions ("group", permission)
+values ('users', 'protected.read');
 
-insert into users_groups (user_id, group_id)
-values (
-    (select id from users where email = 'topaz@ipc.org'),
-    (select id from groups where name = 'users')
-), (
-    (select id from users where email = 'topaz@ipc.org'),
-    (select id from groups where name = 'superusers')
-);
+insert into users_groups (user_id, "group")
+values ((select id from users where email = 'topaz@ipc.org'), 'users');

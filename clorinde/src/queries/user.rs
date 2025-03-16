@@ -150,7 +150,7 @@ where
 }
 pub fn get_user_by_email() -> GetUserByEmailStmt {
     GetUserByEmailStmt(crate::client::async_::Stmt::new(
-        "SELECT * FROM users WHERE email = $1",
+        "select * from users where email = $1",
     ))
 }
 pub struct GetUserByEmailStmt(crate::client::async_::Stmt);
@@ -179,7 +179,7 @@ impl GetUserByEmailStmt {
 }
 pub fn get_user_by_id() -> GetUserByIdStmt {
     GetUserByIdStmt(crate::client::async_::Stmt::new(
-        "SELECT * FROM users WHERE id = $1",
+        "select * from users where id = $1",
     ))
 }
 pub struct GetUserByIdStmt(crate::client::async_::Stmt);
@@ -209,7 +209,7 @@ impl GetUserByIdStmt {
 /// Gets all permissions from all groups a user is in.
 pub fn get_permissions() -> GetPermissionsStmt {
     GetPermissionsStmt(crate::client::async_::Stmt::new(
-        "SELECT DISTINCT permissions.name FROM users JOIN users_groups ON users.id = users_groups.user_id JOIN groups_permissions ON users_groups.group_id = groups_permissions.group_id JOIN permissions ON groups_permissions.permission_id = permissions.id WHERE users.id = $1",
+        "select distinct permissions.name from users join users_groups on users.id = users_groups.user_id join groups_permissions on users_groups.group = groups_permissions.group join permissions on groups_permissions.permission = permissions.name where users.id = $1",
     ))
 }
 pub struct GetPermissionsStmt(crate::client::async_::Stmt);

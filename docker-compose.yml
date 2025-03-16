@@ -8,7 +8,7 @@ services:
     volumes:
       - numby-postgres:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
 
   valkey:
     image: docker.io/valkey/valkey:8
@@ -16,7 +16,7 @@ services:
     volumes:
       - numby-valkey:/data
     ports:
-      - "6379:6379"
+      - 6379:6379
 
   jaeger:
     image: docker.io/jaegertracing/all-in-one:latest
@@ -35,6 +35,45 @@ services:
       - "14268:14268" # Jaeger collector HTTP
       - "9411:9411" # Zipkin compatible endpoint
 
+  mathesar:
+    image: docker.io/mathesar/mathesar:latest
+    container_name: numby-mathesar
+    environment:
+      SECRET_KEY: ZxB2HafGwOeOGoRkmcANDaPY0rO3ytJzde3jwkkACfsKukcz7m
+      POSTGRES_USER: mathesar
+      POSTGRES_PASSWORD: mathesar
+      POSTGRES_DB: mathesar_django
+      POSTGRES_HOST: host.docker.internal
+      POSTGRES_PORT: 5430
+    healthcheck:
+      test: curl -f http://localhost:8000
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
+    ports:
+      - 8000:8000
+    volumes:
+      - mathesar-static:/code/static
+      - mathesar-media:/code/media
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mathesar-db:
+    image: docker.io/pgautoupgrade/pgautoupgrade:17-bookworm
+    container_name: numby-mathesar-postgres
+    environment:
+      POSTGRES_USER: mathesar
+      POSTGRES_PASSWORD: mathesar
+      POSTGRES_DB: mathesar_django
+    volumes:
+      - mathesar-postgres:/var/lib/postgresql/data
+    ports:
+      - 5430:5432
+
 volumes:
   numby-postgres:
   numby-valkey:
+  mathesar-static:
+  mathesar-media:
+  mathesar-postgres:

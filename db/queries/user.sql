@@ -10,7 +10,7 @@ select * from users where id = :id;
 select distinct permissions.name
 from users
     join users_groups on users.id = users_groups.user_id
-    join groups_permissions on users_groups.group_id = groups_permissions.group_id
-    join permissions on groups_permissions.permission_id = permissions.id
+    join groups_permissions on users_groups.group = groups_permissions.group
+    join permissions on groups_permissions.permission = permissions.name
 where
     users.id = :id;
