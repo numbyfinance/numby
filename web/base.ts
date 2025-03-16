@@ -3,7 +3,7 @@ const lightSwitches: NodeListOf<HTMLInputElement> =
   document.querySelectorAll(".light-switch");
 
 if (lightSwitches.length > 0) {
-  lightSwitches.forEach((lightSwitch: HTMLInputElement, i: number) => {
+  lightSwitches.forEach((lightSwitch, i) => {
     if (localStorage.getItem("dark-mode") === "true") {
       lightSwitch.checked = true;
     }
@@ -11,12 +11,7 @@ if (lightSwitches.length > 0) {
     lightSwitch.addEventListener("change", () => {
       const { checked } = lightSwitch;
 
-      lightSwitches.forEach((el: HTMLInputElement, n: number) => {
-        if (n !== i) {
-          el.checked = checked;
-        }
-      });
-
+      lightSwitches.forEach((el, n) => (el.checked = n !== i));
       document.documentElement.classList.add("**:transition-none!");
 
       if (lightSwitch.checked) {
@@ -35,9 +30,10 @@ if (lightSwitches.length > 0) {
         );
       }
 
-      setTimeout(() => {
-        document.documentElement.classList.remove("**:transition-none!");
-      }, 1);
+      setTimeout(
+        () => document.documentElement.classList.remove("**:transition-none!"),
+        1,
+      );
     });
   });
 }

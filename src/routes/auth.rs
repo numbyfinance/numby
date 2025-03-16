@@ -12,7 +12,7 @@ use datastar::{
 };
 use maud::html;
 
-use crate::r#static::file;
+use crate::statics::file;
 use crate::{
     AppState,
     layout::Layout,

@@ -1,8 +1,9 @@
 [package]
 name = "numby"
-version = "0.1.0"
-authors = ["Justin Duch <justin@duch.me>"]
 edition = "2024"
+version = "0.1.0"
+authors = ["Numby Finance <oss@numby.finance>"]
+license = "FSL-1.0-Apache-2.0"
 
 [dependencies]
 clorinde = { path = "./clorinde" }

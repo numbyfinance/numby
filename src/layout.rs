@@ -1,7 +1,7 @@
 use maud::{DOCTYPE, Markup, PreEscaped, html};
 
 use crate::session::AuthSession;
-use crate::r#static::file;
+use crate::statics::file;
 
 #[allow(dead_code)]
 pub struct Layout {

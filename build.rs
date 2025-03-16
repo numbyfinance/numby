@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 fn main() {
     let path = std::fs::canonicalize(".");
 
@@ -46,8 +44,8 @@ fn main() {
     }
 
     // Cache bust static files
-    let asset_dirs = vec![PathBuf::from("./web/static")];
-    let out_dir = PathBuf::from("./src/static/file.rs");
+    let asset_dirs = vec![path.join("./web/static")];
+    let out_dir = path.join("./src/statics/file.rs");
 
     cacheb::codegen(&out_dir, &asset_dirs, &[]).unwrap();
 }

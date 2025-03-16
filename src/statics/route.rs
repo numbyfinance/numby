@@ -1,4 +1,4 @@
-use crate::r#static::file::StaticFile;
+use crate::statics::file::StaticFile;
 use axum::body::Body;
 use axum::http::{HeaderValue, Response, StatusCode, header};
 use axum::response::IntoResponse;

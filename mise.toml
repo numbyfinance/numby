@@ -6,10 +6,6 @@ run = "cargo watch -x run"
 description = "Setup database and run migrations"
 run = "sqlx database setup --source db/migrations"
 
-[tasks."db:drop"]
-description = "Drop database"
-run = "sqlx database drop"
-
 [tasks."db:codegen"]
 description = "Codegen db queries"
 run = "clorinde schema db/migrations/*.up.sql"
@@ -22,8 +18,8 @@ run = "sqlx migrate run --source db/migrations"
 description = "Add a db migration"
 run = "sqlx migrate add --source db/migrations -r"
 
-[tasks."db:migrate:fixture"]
-description = "Add a fixture for tests"
+[tasks."db:fixture"]
+description = "Add a db fixture for tests"
 run = "sqlx migrate add --source db/fixtures"
 
 [env]
