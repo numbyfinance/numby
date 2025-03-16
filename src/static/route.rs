@@ -1,4 +1,4 @@
-use crate::r#static::statics::StaticFile;
+use crate::r#static::file::StaticFile;
 use axum::body::Body;
 use axum::http::{HeaderValue, Response, StatusCode, header};
 use axum::response::IntoResponse;
@@ -7,14 +7,13 @@ use serde::Deserialize;
 use tokio_util::io::ReaderStream;
 
 #[derive(TypedPath, Deserialize)]
-#[typed_path("/static/{path}")]
+#[typed_path("/static/{*path}")]
 pub struct StaticFilePath {
     pub path: String,
 }
 
 pub async fn static_path(StaticFilePath { path }: StaticFilePath) -> impl IntoResponse {
-    let path = format!("/static/{}", path);
-    let data = StaticFile::get(&path);
+    let data = StaticFile::get(&format!("/static/{}", path));
 
     if let Some(data) = data {
         let file = match tokio::fs::File::open(data.file_name).await {

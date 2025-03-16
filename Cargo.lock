@@ -444,10 +444,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "cache-busters"
-version = "0.1.2"
+name = "cacheb"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59d6d44eba5c175d2137023c7762c4670f1ea1b06d21736e44c22b41bb3bb2f6"
+checksum = "75de7882d87a73dbbfcecb652da4cc99013f7749b4c1b72b00e0211680103ea2"
 dependencies = [
  "md5",
 ]
@@ -1648,7 +1648,7 @@ dependencies = [
  "axum-login",
  "axum-macros",
  "axum-tracing-opentelemetry",
- "cache-busters",
+ "cacheb",
  "chrono",
  "clorinde",
  "datastar",

@@ -102,7 +102,7 @@ async fn main() -> Result<()> {
         .merge(protected_routes)
         .merge(routes::auth::router())
         .route("/health", get(routes::health))
-        .route("/static/{path}", get(r#static::route::static_path))
+        .route("/static/{*path}", get(r#static::route::static_path))
         .layer(OtelInResponseLayer::default())
         .layer(OtelAxumLayer::default())
         .layer(auth_layer)

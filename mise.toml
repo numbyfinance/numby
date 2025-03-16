@@ -1,6 +1,6 @@
 [tasks.start]
 description = "Start numby"
-run = "cargo watch -x run --ignore static_files.rs"
+run = "cargo watch -x run"
 
 [tasks."db:setup"]
 description = "Setup database and run migrations"
