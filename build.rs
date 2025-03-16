@@ -1,28 +1,27 @@
 fn main() {
-    let path = std::fs::canonicalize(".");
+    println!("cargo:rerun-if-changed=src");
+    println!("cargo:rerun-if-changed=web");
+    println!("cargo:rerun-if-changed=tailwind.config.ts");
 
-    let path = match path {
-        Ok(p) => p,
-        Err(e) => panic!("{}", e),
-    };
+    let path = std::fs::canonicalize(".").expect("failed geting path");
 
     // Build Tailwind
-    println!("cargo::rerun-if-changed=src");
-    println!("cargo::rerun-if-changed=web/tailwind.css");
-    println!("cargo::rerun-if-changed=tailwind.config.ts");
-    std::process::Command::new("sh")
+    std::process::Command::new("bunx")
         .current_dir(path.clone())
-        .arg("-c")
-        .arg("bunx @tailwindcss/cli -i ./web/tailwind.css -o ./web/static/tailwind.css")
+        .args([
+            "@tailwindcss/cli",
+            "-i",
+            "./web/tailwind.css",
+            "-o",
+            "./static/tailwind.css",
+        ])
         .spawn()
         .expect("failed running tailwind");
 
     // Build first-party TypeScript
-    println!("cargo::rerun-if-changed=web/base.ts");
-    std::process::Command::new("sh")
+    std::process::Command::new("bun")
         .current_dir(path.clone())
-        .arg("-c")
-        .arg("bun build web/base.ts --outdir web/static --minify")
+        .args(["build", "./web/base.ts", "--outdir", "./static", "--minify"])
         .spawn()
         .expect("failed building base.ts");
 
@@ -34,18 +33,13 @@ fn main() {
     for file in vendor_files.iter() {
         std::process::Command::new("bun")
             .current_dir(&path)
-            .arg("build")
-            .arg(file)
-            .arg("--outdir")
-            .arg("web/static/vendor")
-            .arg("--minify")
+            .args(["build", file, "--outdir", "./static/vendor", "--minify"])
             .status()
             .expect(&format!("failed building vendor file: {}", file));
     }
 
     // Cache bust static files
-    let asset_dirs = vec![path.join("./web/static")];
+    let asset_dirs = vec![path.join("./static")];
     let out_dir = path.join("./src/statics/file.rs");
-
     cacheb::codegen(&out_dir, &asset_dirs, &[]).unwrap();
 }

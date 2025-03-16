@@ -1,7 +1,7 @@
 /src/statics/file.rs
-/web/static/tailwind.css
-/web/static/base.js
-/web/static/vendor/**
+/static/tailwind.css
+/static/base.js
+/static/vendor/**
 
 # will have compiled files and executables
 /target
