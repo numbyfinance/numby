@@ -16,14 +16,18 @@ fn main() {
             "./static/tailwind.css",
         ])
         .spawn()
-        .expect("failed running tailwind");
+        .expect("failed running tailwind")
+        .wait()
+        .expect("failed to wait tailwind");
 
     // Build first-party TypeScript
     std::process::Command::new("bun")
         .current_dir(path.clone())
         .args(["build", "./web/base.ts", "--outdir", "./static", "--minify"])
         .spawn()
-        .expect("failed building base.ts");
+        .expect("failed building base.ts")
+        .wait()
+        .expect("failed to wait base");
 
     // Build vendor packages
     let vendor_dir = path.join("web/static/vendor");
@@ -35,7 +39,7 @@ fn main() {
             .current_dir(&path)
             .args(["build", file, "--outdir", "./static/vendor", "--minify"])
             .status()
-            .expect(&format!("failed building vendor file: {}", file));
+            .expect("failed to build vendor");
     }
 
     // Cache bust static files

@@ -30,7 +30,7 @@ pub async fn static_path(StaticFilePath { path }: StaticFilePath) -> impl IntoRe
             .status(StatusCode::OK)
             .header(
                 header::CONTENT_TYPE,
-                HeaderValue::from_str(data.mime.as_ref()).unwrap(),
+                HeaderValue::from_str(data.mime).unwrap(),
             )
             .body(Body::from_stream(ReaderStream::new(file)))
             .unwrap();

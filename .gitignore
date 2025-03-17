@@ -3,6 +3,12 @@
 /static/base.js
 /static/vendor/**
 
+# Editor-specific files
+.zed/
+.helix/
+.vscode/
+.idea/
+
 # will have compiled files and executables
 /target
 node_modules/

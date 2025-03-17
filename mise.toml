@@ -1,10 +1,23 @@
-[tasks.start]
-description = "Start numby"
-run = "cargo watch -x run"
+[tasks."app:start"]
+alias = ["start"]
+description = "Start podman services and numby"
+run = ["podman compose up -d", "cargo watch -x run"]
 
-[tasks."db:setup"]
-description = "Setup database and run migrations"
-run = "sqlx database setup --source db/migrations"
+[tasks."app:setup"]
+description = "Initial setup for app"
+run = ["podman compose up -d", "sqlx database setup --source db/migrations"]
+
+[tasks."test:unit"]
+description = "Run unit tests"
+run = "cargo test --bin numby"
+
+[tasks."test:integration"]
+description = "Run integration tests"
+run = "cargo test --features test-integration"
+
+[tasks."test:e2e"]
+description = "Run end-to-end tests"
+run = "cargo test --features test-e2e"
 
 [tasks."db:codegen"]
 description = "Codegen db queries"
@@ -19,7 +32,7 @@ description = "Add a db migration"
 run = "sqlx migrate add --source db/migrations -r"
 
 [tasks."db:fixture"]
-description = "Add a db fixture for tests"
+description = "Add a testing db fixture"
 run = "sqlx migrate add --source db/fixtures"
 
 [env]
@@ -37,6 +50,7 @@ OTEL_TRACES_SAMPLER = "always_on"
 RUST_LOG = "numby=debug,tower_sessions=warn,axum_login=warn,tower_http=warn,otel=warn,otel::tracing=trace"
 
 [tools]
+rust = { version = "nightly", components = "rust-analyzer,rustfmt,clippy" }
 bun = "latest"
 "cargo:cargo-watch" = "latest"
 "cargo:sqlx-cli" = "latest"

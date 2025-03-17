@@ -339,7 +339,7 @@ impl TestEnv {
         )
         .expect("Failed to create Valkey pool");
 
-        let _ = val_pool.connect();
+        let _ = val_pool.connect().await;
         val_pool.wait_for_connect().await.unwrap();
 
         AppState {
@@ -384,7 +384,7 @@ impl TestEnv {
             .arg(database_url)
             .output()
             .await
-            .expect(&format!("Failed to execute sqlx command: {}", error_msg));
+            .unwrap_or_else(|_| panic!("Failed to execute sqlx command: {}", error_msg));
 
         if !status.status.success() {
             let stderr = String::from_utf8_lossy(&status.stderr);

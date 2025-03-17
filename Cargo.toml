@@ -4,6 +4,11 @@ edition = "2024"
 version = "0.1.0"
 authors = ["Numby Finance <oss@numby.finance>"]
 license = "FSL-1.0-Apache-2.0"
+autotests = false
+
+[features]
+"test.integration" = []
+"test.e2e" = []
 
 [dependencies]
 clorinde = { path = "./clorinde" }
@@ -64,3 +69,8 @@ testcontainers = "0.23"
 
 [build-dependencies]
 cacheb = "0.1"
+
+[[test]]
+name = "e2e"
+path = "tests/lib.rs"
+required-features = ["test.e2e"]

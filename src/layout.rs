@@ -50,7 +50,6 @@ impl Layout {
 
             link rel="stylesheet" href=(assets::tailwind_css);
 
-
             script type="module" src=(assets::vendor::datastar_js) {}
             script type="module" src=(assets::base_js) {}
 

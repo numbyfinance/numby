@@ -22,6 +22,7 @@ mod routes;
 mod session;
 mod statics;
 #[cfg(test)]
+#[cfg(feature = "test.integration")]
 mod tests;
 
 pub use common::tracer;
