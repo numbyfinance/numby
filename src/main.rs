@@ -15,6 +15,7 @@ use tower_sessions_redis_store::{
     fred::prelude::{ClientLike, Config as ValkeyConfig, Pool as ValkeyPool},
 };
 
+mod common;
 mod components;
 mod layout;
 mod routes;
@@ -22,6 +23,8 @@ mod session;
 mod statics;
 #[cfg(test)]
 mod tests;
+
+pub use common::tracer;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -31,7 +34,7 @@ pub struct AppState {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let _ =
+    let _guard =
         init_tracing_opentelemetry::tracing_subscriber_ext::init_subscribers().into_diagnostic()?;
 
     let addr = &"0.0.0.0:3000".parse::<SocketAddr>().into_diagnostic()?;

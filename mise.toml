@@ -23,7 +23,7 @@ description = "Add a db fixture for tests"
 run = "sqlx migrate add --source db/fixtures"
 
 [env]
-_.source = "./env.sh"
+_.source = ".envrc"
 
 DATABASE_URL = "postgres://postgres:numby@localhost/numby"
 VALKEY_URL = "valkey://localhost:6379"
@@ -33,6 +33,8 @@ OTEL_SERVICE_VERSION = "1.0"
 OTEL_EXPORTER_OTLP_TRACES_ENDPOINT = "http://127.0.0.1:4317"
 OTEL_EXPORTER_OTLP_TRACES_PROTOCOL = "grpc"
 OTEL_TRACES_SAMPLER = "always_on"
+
+RUST_LOG = "numby=debug,tower_sessions=warn,axum_login=warn,tower_http=warn,otel=warn,otel::tracing=trace"
 
 [tools]
 bun = "latest"

@@ -40,6 +40,6 @@ fn main() {
 
     // Cache bust static files
     let asset_dirs = vec![path.join("./static")];
-    let out_dir = path.join("./src/statics/file.rs");
+    let out_dir = path.join("./src/statics/assets.rs");
     cacheb::codegen(&out_dir, &asset_dirs, &[]).unwrap();
 }

@@ -30,6 +30,12 @@ impl std::fmt::Debug for AuthenticatedUser {
     }
 }
 
+impl std::fmt::Display for AuthenticatedUser {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "User(id={}, email={})", self.0.id, self.0.email)
+    }
+}
+
 impl From<User> for AuthenticatedUser {
     fn from(user: User) -> Self {
         AuthenticatedUser(user)

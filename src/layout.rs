@@ -1,7 +1,7 @@
 use maud::{DOCTYPE, Markup, PreEscaped, html};
 
 use crate::session::AuthSession;
-use crate::statics::file;
+use crate::statics::assets;
 
 #[allow(dead_code)]
 pub struct Layout {
@@ -43,11 +43,16 @@ impl Layout {
             meta charset="utf-8";
             meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0";
 
-            link rel="stylesheet" href=(file::tailwind_css);
+            link rel="apple-touch-icon" href=(assets::favicon::apple_touch_icon_png);
+            link rel="icon" type="image/png" sizes="32x32" href=(assets::favicon::favicon_32x32_png);
+            link rel="icon" type="image/png" sizes="16x16" href=(assets::favicon::favicon_16x16_png);
+            link rel="manifest" href=(assets::favicon::site_webmanifest);
+
+            link rel="stylesheet" href=(assets::tailwind_css);
 
 
-            script type="module" src=(file::vendor::datastar_js) {}
-            script type="module" src=(file::base_js) {}
+            script type="module" src=(assets::vendor::datastar_js) {}
+            script type="module" src=(assets::base_js) {}
 
             script {
                 (PreEscaped("
