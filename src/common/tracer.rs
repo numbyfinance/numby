@@ -1,6 +1,6 @@
 // I'm already Tracer
 
-use crate::session::AuthSession;
+use super::session::AuthSession;
 
 /// Format an AuthSession to apply to the span tags, should be used on every endpoint
 pub fn fmt(session: &AuthSession) -> String {

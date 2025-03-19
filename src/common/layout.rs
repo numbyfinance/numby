@@ -1,6 +1,6 @@
 use maud::{DOCTYPE, Markup, PreEscaped, html};
 
-use crate::session::AuthSession;
+use crate::common::session::AuthSession;
 use crate::statics::assets;
 
 #[allow(dead_code)]

@@ -47,8 +47,6 @@ OTEL_EXPORTER_OTLP_TRACES_ENDPOINT = "http://127.0.0.1:4317"
 OTEL_EXPORTER_OTLP_TRACES_PROTOCOL = "grpc"
 OTEL_TRACES_SAMPLER = "always_on"
 
-RUST_LOG = "numby=debug,tower_sessions=warn,axum_login=warn,tower_http=warn,otel=warn,otel::tracing=trace"
-
 [tools]
 rust = { version = "nightly", components = "rust-analyzer,rustfmt,clippy" }
 bun = "latest"

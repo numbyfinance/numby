@@ -1,4 +1,6 @@
 --: User()
+--: ApiToken(expires_at?)
+
 --! get_user_by_email : User
 select * from users where email = :email;
 
@@ -14,3 +16,16 @@ from users
     join permissions on groups_permissions.permission = permissions.name
 where
     users.id = :id;
+
+--! get_api_token : ApiToken
+select * from api_tokens
+where token = :token
+    and (expires_at is null or expires_at > now());
+
+--! get_user_from_api_token : User
+select users.*
+from api_tokens
+    join users on api_tokens.user_id = users.id
+where
+    token = :token
+    and (expires_at is null or expires_at > now());

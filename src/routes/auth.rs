@@ -15,8 +15,10 @@ use maud::html;
 use crate::statics::assets;
 use crate::{
     AppState,
-    layout::Layout,
-    session::{AuthSession, Credentials},
+    common::{
+        layout::Layout,
+        session::{AuthSession, Credentials},
+    },
 };
 
 pub fn router() -> Router<AppState> {

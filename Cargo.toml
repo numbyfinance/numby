@@ -37,6 +37,8 @@ tower-http = { version = "0.6", features = [
     "fs",
 ] }
 tower-sessions-redis-store = "0.16"
+juniper = { version = "0.16", features = ["uuid", "chrono-tz"] }
+juniper_axum = "0.2"
 
 # authentication
 axum-login = { git = "https://github.com/maxcountryman/axum-login" }

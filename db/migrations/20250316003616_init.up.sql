@@ -38,6 +38,14 @@ create table if not exists users (
 
 create index idx_users_id on users(id);
 
+create table api_tokens (
+    user_id uuid references users(id),
+    name text not null,
+    token text not null,
+    created_at timestamp with time zone default current_timestamp,
+    expires_at timestamp with time zone null default null
+);
+
 create table if not exists groups (
     name text not null unique primary key
 );
@@ -64,6 +72,13 @@ values (
     'topaz@ipc.org',
     'Topaz & Numby',
     '$argon2id$v=19$m=19456,t=2,p=1$hmH0Kladr68gSnEwAFV9xQ$qmqH96rVX7OTJRsxjfInwboRZ9fh77t/63brhO0Usz0'
+);
+
+insert into api_tokens (user_id, name, token)
+values (
+    '0195989c-d1db-7a70-9060-9cea4a6b8332',
+    'Test token',
+    'api_token_test'
 );
 
 insert into groups (name) values ('users');
