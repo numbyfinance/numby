@@ -29,6 +29,23 @@ services:
       - "4317:4317"
       - "4318:4318"
 
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: numby-selenium
+    environment:
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_SESSION_TIMEOUT=30
+    ports:
+      - 4444:4444
+    shm_size: 2g
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   mathesar:
     image: docker.io/mathesar/mathesar:latest
     container_name: numby-mathesar

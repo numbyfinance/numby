@@ -128,6 +128,7 @@ mod get {
                                            }
 
                                            a
+                                               #sign-in
                                                data-on-click=(login_path)
                                                class="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white ml-3 cursor-pointer"
                                                { "Sign In" }

@@ -67,12 +67,16 @@ opentelemetry = "0.28"
 opentelemetry-otlp = "0.28"
 
 [dev-dependencies]
+anymap3 = "1.0"
+cucumber = "0.21"
 testcontainers = "0.23"
+thirtyfour = "0.35"
 
 [build-dependencies]
 cacheb = "0.1"
 
 [[test]]
-name = "e2e"
-path = "tests/lib.rs"
+name = "auth"
+path = "tests/auth.rs"
 required-features = ["test.e2e"]
+harness = false

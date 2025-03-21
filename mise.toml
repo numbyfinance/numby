@@ -1,7 +1,7 @@
 [tasks."app:start"]
 alias = ["start"]
 description = "Start podman services and numby"
-run = ["podman compose up -d", "cargo watch -x run"]
+run = ["podman compose up -d", "cargo watch -i tests/ -x run"]
 
 [tasks."app:setup"]
 description = "Initial setup for app"
@@ -13,11 +13,11 @@ run = "cargo test --bin numby"
 
 [tasks."test:integration"]
 description = "Run integration tests"
-run = "cargo test --features test-integration"
+run = "cargo test --features test.integration"
 
 [tasks."test:e2e"]
 description = "Run end-to-end tests"
-run = "cargo test --features test-e2e"
+run = "cargo test --features test.e2e"
 
 [tasks."db:codegen"]
 description = "Codegen db queries"
