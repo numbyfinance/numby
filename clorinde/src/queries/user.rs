@@ -1,6 +1,6 @@
 // This file was generated with `clorinde`. Do not modify.
 
-#[derive(serde::Serialize, Debug, Clone, PartialEq, serde::Deserialize)]
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct User {
     pub id: uuid::Uuid,
     pub email: String,
@@ -42,7 +42,7 @@ impl<'a> From<UserBorrowed<'a>> for User {
         }
     }
 }
-#[derive(serde::Serialize, Debug, Clone, PartialEq, serde::Deserialize)]
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct ApiToken {
     pub user_id: uuid::Uuid,
     pub name: String,
@@ -343,7 +343,7 @@ impl GetApiTokenStmt {
 }
 pub fn get_user_from_api_token() -> GetUserFromApiTokenStmt {
     GetUserFromApiTokenStmt(crate::client::async_::Stmt::new(
-        "select users.* from api_tokens left join users on api_tokens.user_id = users.id where token = $1 and (expires_at is null or expires_at > now())",
+        "select users.* from api_tokens join users on api_tokens.user_id = users.id where token = $1 and (expires_at is null or expires_at > now())",
     ))
 }
 pub struct GetUserFromApiTokenStmt(crate::client::async_::Stmt);
