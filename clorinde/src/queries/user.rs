@@ -1,6 +1,6 @@
 // This file was generated with `clorinde`. Do not modify.
 
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, Debug, Clone, PartialEq, serde::Deserialize)]
 pub struct User {
     pub id: uuid::Uuid,
     pub email: String,
@@ -42,7 +42,7 @@ impl<'a> From<UserBorrowed<'a>> for User {
         }
     }
 }
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, Debug, Clone, PartialEq, serde::Deserialize)]
 pub struct ApiToken {
     pub user_id: uuid::Uuid,
     pub name: String,

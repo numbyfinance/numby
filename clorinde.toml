@@ -1,8 +1,6 @@
 queries = "db/queries"
 podman = true
+serialize = true
 
 [types]
-derive-traits = ["serde::Serialize", "serde::Deserialize"]
-
-[types.crates]
-serde = { version = "1.0.218", features = ["derive"] }
+derive-traits = ["serde::Deserialize"]
